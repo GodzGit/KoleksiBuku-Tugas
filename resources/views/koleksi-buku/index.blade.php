@@ -39,6 +39,8 @@
                     <td>{{ $b->judul }}</td>
                     <td>{{ $b->pengarang }}</td>
                     <td>
+                        <a href="{{ route('buku.sertifikat', $b->idbuku) }}"
+                           class="btn btn-sm btn-info">Details</a>
                         <a href="{{ route('koleksi-buku.edit', $b->idbuku) }}"
                            class="btn btn-sm btn-warning">Edit</a>
 
@@ -56,8 +58,12 @@
                 </tr>
                 @endforeach
             </tbody>
-        </table>
 
+            
+        </table>
+    <a href="{{ route('buku.exportPdf') }}" class="btn btn-danger">
+                Export PDF
+            </a>
     </div>
 </div>
 

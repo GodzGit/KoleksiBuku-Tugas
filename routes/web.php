@@ -87,6 +87,12 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::get('/buku/export-pdf', [BukuController::class, 'exportPdf'])
+    ->name('buku.exportPdf');
+
+Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])
+    ->name('buku.sertifikat');
+
 /*
 |--------------------------------------------------------------------------
 | DEFAULT REDIRECT
@@ -98,3 +104,14 @@ Route::get('/', function () {
 });
 
 // --------------------------------------------------------------------------
+// GOOGLE OAUTH ROUTES
+// --------------------------------------------------------------------------
+
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+Route::get('/verify-otp', function () {
+    return view('auth.verify-otp');
+});
+
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
