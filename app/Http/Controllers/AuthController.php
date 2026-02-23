@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
-// use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -82,15 +82,20 @@ class AuthController extends Controller
         $user->save();
 
         // 🔥 Kirim OTP ke email
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('RESEND_API_KEY'),
-            'Content-Type' => 'application/json',
-        ])->post('https://api.resend.com/emails', [
-            'from' => 'onboarding@resend.dev',
-            'to' => [$user->email],
-            'subject' => 'Kode OTP Login',
-            'html' => "<h1>OTP Anda: $otp</h1>",
-        ]);
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . env('RESEND_API_KEY'),
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://api.resend.com/emails', [
+        //     'from' => 'onboarding@resend.dev',
+        //     'to' => [$user->email],
+        //     'subject' => 'Kode OTP Login',
+        //     'html' => "<h1>OTP Anda: $otp</h1>",
+        // ]);
+
+        Mail::raw("Kode OTP login anda adalah: $otp", function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Kode OTP Login');
+        });
 
 // optional debug dulu
 // dd($response->status(), $response->body());
