@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BarangController;
 
 
 
@@ -92,6 +93,10 @@ Route::get('/buku/export-pdf', [BukuController::class, 'exportPdf'])
 
 Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])
     ->name('buku.sertifikat');
+
+Route::resource('barang', BarangController::class);
+Route::post('/barang/cetak', [BarangController::class, 'cetak'])
+    ->name('barang.cetak');
 
 /*
 |--------------------------------------------------------------------------

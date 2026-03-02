@@ -44,7 +44,7 @@
 
 <div class="header">
     <h2>FAKULTAS Vokasi Universitas Airlangga</h2>
-    <h3>LAPORAN DATA KOLEKSI BUKU</h3>
+    <h3>LAPORAN DATA KOLEKSI BUKU 2</h3>
 </div>
 
 <table>
