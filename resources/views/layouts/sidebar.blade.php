@@ -43,5 +43,12 @@
             </div>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('barang.index') }}">
+                <span class="menu-title">tag harga</span>
+                <i class="mdi mdi-home menu-icon"></i>
+            </a>
+        </li>
+
     </ul>
 </nav>

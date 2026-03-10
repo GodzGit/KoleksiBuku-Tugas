@@ -2,35 +2,35 @@
 <html>
 <head>
     <style>
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
+@page {
+    size: A4 portrait;
+    margin: 4mm 5mm;
+}
 
-        body {
-            margin: 0;
-            font-size: 10px;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
 
-        table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
+table {
+    width: 200mm;              /* A4 - margin kiri kanan */
+    table-layout: fixed;
+    border-collapse: separate; /* penting */
+    border-spacing: 3mm 3mm;
+}
 
-        td {
-            height: 21mm;
-            vertical-align: top;
-            padding: 3mm;
-            box-sizing: border-box;
+td {
+    width: 38mm;
+    height: 18mm;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2mm;
+    box-sizing: border-box;
+    /* outline: 1px solid #000;  */
+}
 
-            /* HAPUS BORDER */
-            /* border: 1px solid black; */
-
-            /* GANTI JADI OUTLINE */
-            outline: 0.5px solid #999;
-        }
-    </style>
+</style>
 </head>
 <body>
 

@@ -1,33 +1,76 @@
-<form method="POST" action="{{ route('barang.cetak') }}">
-    @csrf
+@extends('layouts.master')
 
-    <table id="datatable" class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Pilih</th>
-                <th>ID</th>
-                <th>Nama Barang</th>
-                <th>Harga</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($data as $item)
-            <tr>
-                <td>
-                    <input type="checkbox" name="selected[]" value="{{ $item->id_barang }}">
-                </td>
-                <td>{{ $item->id_barang }}</td>
-                <td>{{ $item->nama_barang }}</td>
-                <td>{{ $item->harga }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+@section('title','Cetak Label Barang')
 
-    <br>
+@section('content')
 
-    X: <input type="number" name="x" min="1" max="5" required>
-    Y: <input type="number" name="y" min="1" max="8" required>
+<div class="card">
+    <div class="card-body">
 
-    <button type="submit">Cetak Label</button>
-</form>
+        <h4 class="card-title">Cetak Label Barang</h4>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('barang.cetak') }}">
+            @csrf
+
+            <div class="table-responsive">
+                <table id="datatable" class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th width="80">Pilih</th>
+                            <th>ID</th>
+                            <th>Nama Barang</th>
+                            <th>Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data as $item)
+                        <tr>
+                            <td>
+                                <input type="checkbox"
+                                       name="selected[]"
+                                       value="{{ $item->id_barang }}">
+                            </td>
+                            <td>{{ $item->id_barang }}</td>
+                            <td>{{ $item->nama_barang }}</td>
+                            <td>Rp {{ number_format($item->harga,0,',','.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-2">
+                    <label>Posisi X</label>
+                    <input type="number" name="x"
+                           class="form-control"
+                           min="1" max="5" required>
+                </div>
+
+                <div class="col-md-2">
+                    <label>Posisi Y</label>
+                    <input type="number" name="y"
+                           class="form-control"
+                           min="1" max="8" required>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit"
+                            class="btn btn-gradient-primary w-100">
+                        Cetak Label
+                    </button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@endsection
