@@ -13,7 +13,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('kategori.store') }}">
+        <form class="form-crud" method="POST" action="{{ route('kategori.store') }}">
             @csrf
 
             <div class="form-group">
@@ -24,8 +24,11 @@
                        required>
             </div>
 
-            <button type="submit" class="btn btn-gradient-primary mt-3">
-                Simpan
+            <button type="button" class="btn btn-gradient-primary mt-3 btn-submit">
+                <span class="btn-text">
+                    Simpan
+                </span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
             </button>
         </form>
     </div>

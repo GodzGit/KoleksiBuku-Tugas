@@ -98,6 +98,14 @@ Route::resource('barang', BarangController::class);
 Route::post('/barang/cetak', [BarangController::class, 'cetak'])
     ->name('barang.cetak');
 
+
+Route::get('/javascript', function () {
+    return view('javascript.index');
+})->name('javascript.index');
+
+Route::get('/select-practice', function () {
+    return view('javascript.select');
+})->name('javascript.select');
 /*
 |--------------------------------------------------------------------------
 | DEFAULT REDIRECT

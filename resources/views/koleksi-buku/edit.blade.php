@@ -7,7 +7,7 @@
     <div class="card-body">
         <h4 class="card-title">Edit Buku</h4>
 
-        <form method="POST" action="{{ route('koleksi-buku.update', $buku->idbuku) }}">
+        <form class="form-crud" method="POST" action="{{ route('koleksi-buku.update', $buku->idbuku) }}">
             @csrf
             @method('PUT')
 
@@ -50,9 +50,9 @@
                        required>
             </div>
 
-            <button type="submit"
-                    class="btn btn-gradient-primary mt-3">
-                Update
+            <button type="button" class="btn btn-gradient-primary mt-3 btn-submit">
+                <span class="btn-text">Simpan</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
             </button>
 
             <a href="{{ route('koleksi-buku.index') }}"

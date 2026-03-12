@@ -7,7 +7,7 @@
     <div class="card-body">
         <h4 class="card-title">Edit Kategori</h4>
 
-        <form method="POST" action="{{ route('kategori.update', $kategori->idkategori) }}">
+        <form class="form-crud" method="POST" action="{{ route('kategori.update', $kategori->idkategori) }}">
             @csrf
             @method('PUT')
 
@@ -20,9 +20,12 @@
                        required>
             </div>
 
-            <button type="submit"
-                    class="btn btn-gradient-primary mt-3">
-                Update
+            <button type="button"
+                    class="btn btn-gradient-primary mt-3 btn-submit">
+                <span class="btn-text">
+                    Simpan
+                </span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
             </button>
 
             <a href="{{ route('kategori.index') }}"

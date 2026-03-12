@@ -49,10 +49,15 @@
                               style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Yakin hapus?')">
+                            <button type="button" class="btn btn-sm btn-danger btn-delete">
+
+                                <span class="btn-text">
                                 Delete
-                            </button>
+                                </span>
+
+                                <span class="spinner-border spinner-border-sm d-none"></span>
+
+                                </button>
                         </form>
                     </td>
                 </tr>

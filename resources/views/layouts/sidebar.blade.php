@@ -46,7 +46,18 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ route('barang.index') }}">
                 <span class="menu-title">tag harga</span>
-                <i class="mdi mdi-home menu-icon"></i>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('javascript.index') }}">
+                <span class="menu-title">javascript practice</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('javascript.select') }}">
+                <span class="menu-title">select practice</span>
             </a>
         </li>
 
