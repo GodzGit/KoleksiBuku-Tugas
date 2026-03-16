@@ -6,6 +6,10 @@ use App\Http\Controllers\BukuController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\TransaksiController;
+
+
 
 
 
@@ -106,6 +110,19 @@ Route::get('/javascript', function () {
 Route::get('/select-practice', function () {
     return view('javascript.select');
 })->name('javascript.select');
+
+// Tugas a: Dropdown wilayah (Provinsi, Kota, Kecamatan, Kelurahan)
+Route::get('/wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
+Route::get('/get-kota/{id}', [WilayahController::class, 'getKota']);
+Route::get('/get-kecamatan/{id}', [WilayahController::class, 'getKecamatan']);
+Route::get('/get-kelurahan/{id}', [WilayahController::class, 'getKelurahan']);
+
+
+// Tugas b: Cek barang saat tekan Enter
+// Route untuk menampilkan halaman utama transaksi
+Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+Route::get('/cek-barang/{kode}', [TransaksiController::class, 'cekBarang']);
+Route::post('/simpan-transaksi', [TransaksiController::class, 'simpan']);
 /*
 |--------------------------------------------------------------------------
 | DEFAULT REDIRECT

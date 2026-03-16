@@ -61,5 +61,17 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('wilayah.index') }}">
+                <span class="menu-title">wilayah</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('transaksi.index') }}">
+                <span class="menu-title">transaksi</span>
+            </a>
+        </li>
+
     </ul>
 </nav>

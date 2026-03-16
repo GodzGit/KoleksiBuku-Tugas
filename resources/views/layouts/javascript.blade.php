@@ -4,3 +4,4 @@
 <!-- <script src="{{ asset('template/js/buku.js') }}"></script> -->
 <script src="{{ asset('template/js/form-handler.js') }}"></script>
 <script src="{{ asset('template/js/javascript-practice.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

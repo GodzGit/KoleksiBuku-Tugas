@@ -8,8 +8,8 @@ class barang extends Model
 {
     protected $table = 'barang';
     protected $primaryKey = 'id_barang';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $guarded = []; // Mengizinkan semua kolom diisi
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_barang',
