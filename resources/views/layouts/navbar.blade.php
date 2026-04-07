@@ -1,6 +1,6 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
+        <a class="navbar-brand brand-logo" href="{{ auth()->user()->role === 'vendor' ? route('vendor.dashboard') : route('dashboard') }}">
             <img src="{{ asset('template/images/logo.svg') }}" alt="logo"/>
         </a>
         <a class="navbar-brand brand-logo-mini" href="#">
@@ -25,6 +25,13 @@
                     </div>
                     <div class="nav-profile-text">
                         <p class="mb-1 text-black">{{ auth()->user()->name }}</p>
+                        @if(auth()->user()->role === 'vendor')
+                            <span class="text-secondary text-small">Vendor</span>
+                        @elseif(auth()->user()->role === 'admin')
+                            <span class="text-secondary text-small">Administrator</span>
+                        @else
+                            <span class="text-secondary text-small">Customer</span>
+                        @endif
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown">
@@ -34,7 +41,6 @@
                             <i class="mdi mdi-logout me-2 text-primary"></i> Logout
                         </button>
                     </form>
-
                 </div>
             </li>
 

@@ -9,31 +9,33 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\TransaksiController;
 
+// ========== PAYMENT GATEWAY CONTROLLERS ==========
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
+/*
+|--------------------------------------------------------------------------
+| LANDING PAGE (Tanpa Login - Akses Pertama)
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/api/menus-by-vendor/{idvendor}', [LandingController::class, 'getMenusByVendor'])->name('api.menus.by.vendor');
 
-
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->name('dashboard');
 /*
 |--------------------------------------------------------------------------
 | AUTH ROUTES (Guest Only)
 |--------------------------------------------------------------------------
 */
-
 Route::middleware('guest')->group(function () {
-
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-
 });
 
 /*
@@ -42,67 +44,43 @@ Route::middleware('guest')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+// ========== ADMIN PANEL (Transaksi saja, dashboard tetap pakai yang lama) ==========
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions');
+    Route::get('/transactions/{idpesanan}', [AdminTransactionController::class, 'show'])->name('transactions.show');
+});
+
 Route::middleware('auth')->group(function () {
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard')
-    ->middleware('auth');
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
     // Kategori Routes
-    Route::get('/kategori', [KategoriController::class, 'index'])
-        ->name('kategori.index');
-
-    Route::get('/kategori/create', [KategoriController::class, 'create'])
-        ->name('kategori.create');
-
-    Route::post('/kategori', [KategoriController::class, 'store'])
-        ->name('kategori.store');
-
-    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])
-        ->name('kategori.edit');
-
-    Route::put('/kategori/{id}', [KategoriController::class, 'update'])
-        ->name('kategori.update');
-
-    Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])
-        ->name('kategori.destroy');
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
+    Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
     // Koleksi buku
-    Route::get('/koleksi-buku', [BukuController::class, 'index'])
-        ->name('koleksi-buku.index');
-
-    Route::get('/koleksi-buku/create', [BukuController::class, 'create'])
-        ->name('koleksi-buku.create');
-
-    Route::post('/koleksi-buku', [BukuController::class, 'store'])
-        ->name('koleksi-buku.store');
-
-    Route::get('/koleksi-buku/{id}/edit', [BukuController::class, 'edit'])
-        ->name('koleksi-buku.edit');
-
-    Route::put('/koleksi-buku/{id}', [BukuController::class, 'update'])
-        ->name('koleksi-buku.update');
-
-    Route::delete('/koleksi-buku/{id}', [BukuController::class, 'destroy'])
-        ->name('koleksi-buku.destroy');
-
+    Route::get('/koleksi-buku', [BukuController::class, 'index'])->name('koleksi-buku.index');
+    Route::get('/koleksi-buku/create', [BukuController::class, 'create'])->name('koleksi-buku.create');
+    Route::post('/koleksi-buku', [BukuController::class, 'store'])->name('koleksi-buku.store');
+    Route::get('/koleksi-buku/{id}/edit', [BukuController::class, 'edit'])->name('koleksi-buku.edit');
+    Route::put('/koleksi-buku/{id}', [BukuController::class, 'update'])->name('koleksi-buku.update');
+    Route::delete('/koleksi-buku/{id}', [BukuController::class, 'destroy'])->name('koleksi-buku.destroy');
 });
 
-Route::get('/buku/export-pdf', [BukuController::class, 'exportPdf'])
-    ->name('buku.exportPdf');
+// Buku export routes (tetap aksesible tanpa auth, bisa disesuaikan)
+Route::get('/buku/export-pdf', [BukuController::class, 'exportPdf'])->name('buku.exportPdf');
+Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])->name('buku.sertifikat');
 
-Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])
-    ->name('buku.sertifikat');
-
+// Barang routes
 Route::resource('barang', BarangController::class);
-Route::post('/barang/cetak', [BarangController::class, 'cetak'])
-    ->name('barang.cetak');
+Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
 
-
+// Javascript practice
 Route::get('/javascript', function () {
     return view('javascript.index');
 })->name('javascript.index');
@@ -111,37 +89,78 @@ Route::get('/select-practice', function () {
     return view('javascript.select');
 })->name('javascript.select');
 
-// Tugas a: Dropdown wilayah (Provinsi, Kota, Kecamatan, Kelurahan)
+// Wilayah (dropdown berjenjang)
 Route::get('/wilayah', [WilayahController::class, 'index'])->name('wilayah.index');
 Route::get('/get-kota/{id}', [WilayahController::class, 'getKota']);
 Route::get('/get-kecamatan/{id}', [WilayahController::class, 'getKecamatan']);
 Route::get('/get-kelurahan/{id}', [WilayahController::class, 'getKelurahan']);
 
-
-// Tugas b: Cek barang saat tekan Enter
-// Route untuk menampilkan halaman utama transaksi
+// Transaksi
 Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
 Route::get('/cek-barang/{kode}', [TransaksiController::class, 'cekBarang']);
 Route::post('/simpan-transaksi', [TransaksiController::class, 'simpan']);
+
 /*
 |--------------------------------------------------------------------------
-| DEFAULT REDIRECT
+| PAYMENT GATEWAY ROUTES (CART, CHECKOUT, PAYMENT)
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return redirect()->route('login');
+// ========== CART (Session Based) ==========
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add/{idmenu}', [CartController::class, 'add'])->name('add');
+    Route::patch('/update/{idmenu}', [CartController::class, 'update'])->name('update');
+    Route::delete('/remove/{idmenu}', [CartController::class, 'remove'])->name('remove');
+    Route::delete('/clear', [CartController::class, 'clear'])->name('clear');
 });
 
-// --------------------------------------------------------------------------
-// GOOGLE OAUTH ROUTES
-// --------------------------------------------------------------------------
+// ========== CHECKOUT & PAYMENT ==========
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
+// ========== PAYMENT ROUTES ==========
+Route::prefix('payment')->name('payment.')->group(function () {
+    Route::get('/{idpesanan}', [PaymentController::class, 'show'])->name('show');
+    Route::post('/process/{idpesanan}', [PaymentController::class, 'process'])->name('process');
+    Route::post('/notification', [PaymentController::class, 'notification'])->name('notification');
+    Route::get('/success/{idpesanan}', [PaymentController::class, 'success'])->name('success');
+    Route::get('/check/{idpesanan}', [PaymentController::class, 'checkStatus'])->name('check'); // TAMBAHKAN INI
+});
+Route::post('/payment/update-status/{idpesanan}', [PaymentController::class, 'updateStatus'])->name('payment.update-status');
+
+// ========== VENDOR PANEL ==========
+Route::prefix('vendor')->name('vendor.')->group(function () {
+    Route::get('/', [VendorController::class, 'dashboard'])->name('dashboard');
+    
+    // Menu Management
+    Route::get('/menu', [VendorController::class, 'menuIndex'])->name('menu.index');
+    Route::get('/menu/create', [VendorController::class, 'menuCreate'])->name('menu.create');
+    Route::post('/menu', [VendorController::class, 'menuStore'])->name('menu.store');
+    Route::get('/menu/{idmenu}/edit', [VendorController::class, 'menuEdit'])->name('menu.edit');
+    Route::put('/menu/{idmenu}', [VendorController::class, 'menuUpdate'])->name('menu.update');
+    Route::delete('/menu/{idmenu}', [VendorController::class, 'menuDestroy'])->name('menu.destroy');
+    
+    // Orders (Lunas only)
+    Route::get('/orders', [VendorController::class, 'ordersIndex'])->name('orders.index');
+    Route::get('/orders/{idpesanan}', [VendorController::class, 'ordersShow'])->name('orders.show');
+});
+
+/*
+|--------------------------------------------------------------------------
+| GOOGLE OAUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
+/*
+|--------------------------------------------------------------------------
+| OTP VERIFICATION
+|--------------------------------------------------------------------------
+*/
 Route::get('/verify-otp', function () {
     return view('auth.verify-otp');
-});
+})->name('verify-otp');
 
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);

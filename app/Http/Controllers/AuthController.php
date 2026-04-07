@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
@@ -24,29 +25,69 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // Validasi
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:5'
+            'password' => 'required|min:5|confirmed',
+            'role' => 'required|in:customer,vendor,admin',
+            'nama_vendor' => 'required_if:role,vendor|nullable|string|max:255',
         ]);
 
-        User::create([
+        // Buat user
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
-        return redirect()->route('login')
-                        ->with('success','Registration successful. Please login.');
+        // Jika role vendor, buat vendor record
+        if ($request->role === 'vendor') {
+            $vendor = Vendor::create([
+                'nama_vendor' => $request->nama_vendor,
+                'user_id' => $user->id,
+            ]);
+            
+            $user->vendor_id = $vendor->idvendor;
+            $user->save();
+        }
+
+        // Auto login
+        Auth::login($user);
+
+        // Redirect berdasarkan role
+        if ($user->role === 'vendor') {
+            return redirect()->route('vendor.dashboard');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->route('landing');
+        }
     }
 
     public function login(Request $request)
     {
-        if (Auth::attempt($request->only('email','password'))) {
-            return redirect()->route('dashboard');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            $user = Auth::user();
+            
+            if ($user->role === 'vendor') {
+                return redirect()->route('vendor.dashboard');
+            } elseif ($user->role === 'admin') {
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('landing');
+            }
         }
 
-        return back()->with('error', 'Login gagal');
+        return back()->withErrors(['email' => 'Email atau password salah.'])->onlyInput('email');
     }
 
     public function logout(Request $request)
@@ -54,8 +95,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect('/login');
+        return redirect('/');
     }
     
     public function redirectToGoogle()
