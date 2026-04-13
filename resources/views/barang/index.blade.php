@@ -8,24 +8,27 @@
     <div class="card-body">
 
         <h4 class="card-title">Cetak Label Barang</h4>
-
+        <a href="{{ route('barang.create') }}" class="btn btn-primary mb-3">Tambah Barang</a>
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
-        <form method="POST" action="{{ route('barang.cetak') }}">
+        <form  method="POST" action="{{ route('barang.cetak') }}">
             @csrf
+            
 
             <div class="table-responsive">
                 <table id="datatable" class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th width="80">Pilih</th>
-                            <th>ID</th>
+                            <th>Kode Barang</th>
                             <th>Nama Barang</th>
                             <th>Harga</th>
+                            <th>Aksi</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -36,9 +39,12 @@
                                        name="selected[]"
                                        value="{{ $item->id_barang }}">
                             </td>
-                            <td>{{ $item->id_barang }}</td>
+                            <td>{{ $item->kode_barang }}</td>
                             <td>{{ $item->nama_barang }}</td>
                             <td>Rp {{ number_format($item->harga,0,',','.') }}</td>
+                            <td>
+                                <a href="{{ route('barang.edit', $item->id_barang) }}" class="btn btn-warning btn-sm">Edit</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -69,7 +75,19 @@
             </div>
 
         </form>
+        {{-- FORM DELETE DI LUAR --}}
+        <form id="form-delete" method="POST" style="display:none;">
+            @csrf
+            @method('DELETE')
+        </form>
 
+        <script>
+        function hapus(id) {
+            let form = document.getElementById('form-delete');
+            form.action = '/barang/' + id;
+            form.submit();
+        }
+        </script>
     </div>
 </div>
 

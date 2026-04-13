@@ -27,7 +27,7 @@ td {
     vertical-align: middle;
     padding: 2mm;
     box-sizing: border-box;
-    /* outline: 1px solid #000;  */
+    outline: 1px solid #000; 
 }
 
 </style>
@@ -47,12 +47,26 @@ td {
             @endphp
 
             <td>
-                @if($current_slot >= $index_awal && $counter < count($barang))
-                    <strong>{{ $barang[$counter]->nama_barang }}</strong><br>
+            @if($current_slot >= $index_awal && $counter < count($barang))
+
+                {{-- 🔥 BARCODE --}}
+                <img src="data:image/png;base64,{{ $barang[$counter]->barcode }}" 
+                    style="width:100%; height:8mm; margin-bottom:1mm;">
+
+                {{-- ID BARANG --}}
+                <strong style="font-size:10px;">
+                    {{ $barang[$counter]->kode_barang }}
+                </strong><br>
+
+                {{-- HARGA --}}
+                <span style="font-size:9px;">
                     Rp {{ number_format($barang[$counter]->harga,0,',','.') }}
-                    @php $counter++; @endphp
-                @endif
-            </td>
+                </span>
+
+                @php $counter++; @endphp
+
+            @endif
+        </td>
         @endfor
     </tr>
 @endfor

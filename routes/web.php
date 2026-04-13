@@ -16,6 +16,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\CustomerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,8 +79,26 @@ Route::get('/buku/export-pdf', [BukuController::class, 'exportPdf'])->name('buku
 Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])->name('buku.sertifikat');
 
 // Barang routes
-Route::resource('barang', BarangController::class);
-Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
+
+// 🔥 CETAK (AMAN SEKARANG)
+Route::post('/barang/cetak-label', [BarangController::class, 'cetak'])->name('barang.cetak');
+// INDEX
+Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
+
+// CREATE
+Route::get('/barang/create', [BarangController::class, 'create'])->name('barang.create');
+Route::post('/barang', [BarangController::class, 'store'])->name('barang.store');
+
+// EDIT
+Route::get('/barang/{id_barang}/edit', [BarangController::class, 'edit'])
+    ->whereNumber('id_barang') ->name('barang.edit');
+
+Route::put('/barang/{id_barang}', [BarangController::class, 'update'])
+    ->whereNumber('id_barang') ->name('barang.update');
+
+Route::delete('/barang/{id_barang}', [BarangController::class, 'destroy'])
+    ->whereNumber('id_barang') ->name('barang.destroy');
+
 
 // Javascript practice
 Route::get('/javascript', function () {
@@ -144,6 +164,23 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
     // Orders (Lunas only)
     Route::get('/orders', [VendorController::class, 'ordersIndex'])->name('orders.index');
     Route::get('/orders/{idpesanan}', [VendorController::class, 'ordersShow'])->name('orders.show');
+});
+
+// Customer routes
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/', [CustomerController::class, 'index'])->name('index');
+    
+    // Metode 1: Blob
+    Route::get('/create-blob', [CustomerController::class, 'createBlob'])->name('create-blob');
+    Route::post('/store-blob', [CustomerController::class, 'storeBlob'])->name('store-blob');
+    Route::get('/foto/{id}', [CustomerController::class, 'showFoto'])->name('foto');
+    
+    // Metode 2: File
+    Route::get('/create-file', [CustomerController::class, 'createFile'])->name('create-file');
+    Route::post('/store-file', [CustomerController::class, 'storeFile'])->name('store-file');
+    
+    // Hapus
+    Route::delete('/{id}', [CustomerController::class, 'destroy'])->name('destroy');
 });
 
 /*

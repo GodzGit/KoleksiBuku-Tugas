@@ -86,6 +86,27 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#customerMenu">
+                    <span class="menu-title">Customer</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-account-group"></i>
+                </a>
+                <div class="collapse" id="customerMenu">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('customer.index') }}">Data Customer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('customer.create-blob') }}">Tambah (Blob)</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('customer.create-file') }}">Tambah (File)</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
         @elseif(auth()->user()->role === 'vendor')
             {{-- MENU UNTUK VENDOR --}}
             <li class="nav-item">

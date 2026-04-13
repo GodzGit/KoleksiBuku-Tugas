@@ -16,6 +16,15 @@
                 <div class="alert alert-success">
                     <strong>Status: {{ $pesanan->status_text }}</strong>
                 </div>
+
+                {{-- QR CODE --}}
+                <div class="mb-4">
+                    <label class="form-label fw-bold">QR Code Pesanan</label>
+                    <div class="bg-light p-3 rounded d-inline-block">
+                        {!! QrCode::size(200)->generate($pesanan->idpesanan) !!}
+                    </div>
+                    <p class="text-muted mt-2 small">Scan QR code ini untuk melihat id pesanan</p>
+                </div>
                 
                 <div class="mt-4">
                     <p>Detail Pesanan:</p>
@@ -46,7 +55,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@section('js-page')
 <script>
     // Redirect ke beranda setelah 5 detik
     setTimeout(function() {
