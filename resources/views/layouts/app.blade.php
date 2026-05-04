@@ -111,6 +111,11 @@
         .alert {
             border-radius: 10px;
         }
+        
+        .dropdown-item.text-danger:hover {
+            background-color: #dc3545;
+            color: white !important;
+        }
     </style>
     
     @yield('styles')
@@ -128,11 +133,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    
+                    {{-- MENU UNTUK SEMUA USER (termasuk customer login) --}}
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('landing') ? 'active' : '' }}" href="{{ route('landing') }}">
                             <i class="fas fa-home"></i> Beranda
                         </a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link position-relative {{ request()->routeIs('cart.*') ? 'active' : '' }}" href="{{ route('cart.index') }}">
                             <i class="fas fa-shopping-cart"></i> Keranjang
@@ -144,54 +152,101 @@
                             @endif
                         </a>
                     </li>
-                    
-                    {{-- Vendor Panel Link --}}
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('vendor.*') ? 'active' : '' }}" href="{{ route('vendor.dashboard') }}">
-                            <i class="fas fa-store"></i> Vendor Panel
-                        </a>
-                    </li>
-                    
-                    {{-- Admin Dashboard (Login dulu) --}}
+
+                    {{-- MENU UNTUK CUSTOMER YANG LOGIN --}}
                     @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-cog"></i> Admin
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('koleksi-buku.index') }}">
-                                        <i class="fas fa-book"></i> Kelola Buku
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('kategori.index') }}">
-                                        <i class="fas fa-tags"></i> Kelola Kategori
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">
-                                            <i class="fas fa-sign-out-alt"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
+                        @if(auth()->user()->role === 'customer')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}" href="{{ route('history.index') }}">
+                                    <i class="fas fa-history"></i> History
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
+                    
+                    {{-- MENU UNTUK VENDOR (login sebagai vendor) --}}
+                    @auth
+                        @if(auth()->user()->role === 'vendor')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('vendor.*') ? 'active' : '' }}" href="{{ route('vendor.dashboard') }}">
+                                    <i class="fas fa-store"></i> Vendor Panel
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
+                    
+                    {{-- MENU UNTUK ADMIN (login sebagai admin) --}}
+                    @auth
+                        @if(auth()->user()->role === 'admin')
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-cog"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('koleksi-buku.index') }}">
+                                            <i class="fas fa-book"></i> Kelola Buku
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('kategori.index') }}">
+                                            <i class="fas fa-tags"></i> Kelola Kategori
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+                    @endauth
+
+                    {{-- PROFIL & LOGOUT UNTUK CUSTOMER YANG LOGIN --}}
+                    @auth
+                        @if(auth()->user()->role === 'customer')
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i> {{ auth()->user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+                    @endauth
+                    
+                    {{-- TOMBOL LOGIN UNTUK GUEST (BELUM LOGIN) --}}
+                    @guest
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">
-                                <i class="fas fa-sign-in-alt"></i> Login Admin
+                                <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
-                    @endauth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                    @endguest
+
                 </ul>
             </div>
         </div>
@@ -250,8 +305,6 @@
     {{-- jQuery (optional untuk beberapa fitur) --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    
-    
     {{-- Midtrans Snap JS (untuk payment) --}}
     <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
     

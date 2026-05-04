@@ -9,6 +9,7 @@
 
         <h4 class="card-title">Cetak Label Barang</h4>
         <a href="{{ route('barang.create') }}" class="btn btn-primary mb-3">Tambah Barang</a>
+        <a href="{{ route('barang.scan') }}" class="btn btn-primary mb-3">Scan Barang</a>
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

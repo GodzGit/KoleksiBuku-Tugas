@@ -141,6 +141,13 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('vendor.scan') }}">
+                    <span class="menu-title">Scan QR Customer</span>
+                    <i class="mdi mdi-qrcode-scan menu-icon"></i>
+                </a>
+            </li>
+
         @else
             {{-- MENU UNTUK CUSTOMER --}}
             <li class="nav-item">

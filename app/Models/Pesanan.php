@@ -10,7 +10,7 @@ class Pesanan extends Model
     protected $primaryKey = 'idpesanan';
     public $timestamps = false;
     
-    protected $fillable = ['nama', 'timestamp', 'total', 'metode_bayar', 'status_bayar'];
+    protected $fillable = ['nama', 'timestamp', 'total', 'metode_bayar', 'status_bayar', 'user_id'];
     
     protected $casts = [
         'timestamp' => 'datetime',
@@ -72,5 +72,10 @@ class Pesanan extends Model
             self::METODE_QRIS => 'QRIS',
             default => '-'
         };
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

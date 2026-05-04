@@ -25,12 +25,39 @@ td {
     height: 18mm;
     text-align: center;
     vertical-align: middle;
-    padding: 2mm;
+    padding: 1.5mm;
     box-sizing: border-box;
     outline: 1px solid #000; 
 }
 
-</style>
+.barcode-wrapper {
+    display: inline-block;
+    width: 34mm;
+    height: 12mm;
+    text-align: center;
+}
+
+.barcode-wrapper img {
+    width: 32mm;
+    height: 7.5mm;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 1mm auto;
+}
+
+.barcode-wrapper strong {
+    font-size: 10px;
+    display: block;
+    margin-bottom: 0.5mm;
+    line-height: 1;
+}
+
+.barcode-wrapper span {
+    font-size: 9px;
+    display: block;
+    line-height: 1;
+}
+    </style>
 </head>
 <body>
 
@@ -48,25 +75,25 @@ td {
 
             <td>
             @if($current_slot >= $index_awal && $counter < count($barang))
+                <div class="barcode-wrapper">
+                    {{-- 🔥 BARCODE --}}
+                    <img src="data:image/png;base64,{{ $barang[$counter]->barcode }}">
 
-                {{-- 🔥 BARCODE --}}
-                <img src="data:image/png;base64,{{ $barang[$counter]->barcode }}" 
-                    style="width:100%; height:8mm; margin-bottom:1mm;">
+                    {{-- ID BARANG --}}
+                    <strong>
+                        {{ $barang[$counter]->kode_barang }}
+                    </strong>
 
-                {{-- ID BARANG --}}
-                <strong style="font-size:10px;">
-                    {{ $barang[$counter]->kode_barang }}
-                </strong><br>
-
-                {{-- HARGA --}}
-                <span style="font-size:9px;">
-                    Rp {{ number_format($barang[$counter]->harga,0,',','.') }}
-                </span>
+                    {{-- HARGA --}}
+                    <span>
+                        Rp {{ number_format($barang[$counter]->harga, 0, ',', '.') }}
+                    </span>
+                </div>
 
                 @php $counter++; @endphp
 
             @endif
-        </td>
+            </td>
         @endfor
     </tr>
 @endfor

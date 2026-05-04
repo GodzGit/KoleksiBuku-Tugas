@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\VendorScanController;
+use App\Http\Controllers\HistoryController;
 
 // ========== PAYMENT GATEWAY CONTROLLERS ==========
 use App\Http\Controllers\LandingController;
@@ -17,6 +19,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\CustomerController;
+
 
 
 /*
@@ -80,7 +83,7 @@ Route::get('/buku/{id}/sertifikat', [BukuController::class, 'exportSertifikat'])
 
 // Barang routes
 
-// 🔥 CETAK (AMAN SEKARANG)
+// CETAK
 Route::post('/barang/cetak-label', [BarangController::class, 'cetak'])->name('barang.cetak');
 // INDEX
 Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
@@ -98,6 +101,11 @@ Route::put('/barang/{id_barang}', [BarangController::class, 'update'])
 
 Route::delete('/barang/{id_barang}', [BarangController::class, 'destroy'])
     ->whereNumber('id_barang') ->name('barang.destroy');
+Route::get('barang/scan', function () {
+    return view('barang.scan');
+})->name('barang.scan');
+
+Route::get('/cek-barang/{kode}', [TransaksiController::class, 'cekBarang']);
 
 
 // Javascript practice
@@ -164,6 +172,8 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
     // Orders (Lunas only)
     Route::get('/orders', [VendorController::class, 'ordersIndex'])->name('orders.index');
     Route::get('/orders/{idpesanan}', [VendorController::class, 'ordersShow'])->name('orders.show');
+    Route::get('/scan', [VendorScanController::class, 'index'])->name('scan');
+    Route::get('/scan/cek/{idpesanan}', [VendorScanController::class, 'cekPesanan'])->name('scan.cek');
 });
 
 // Customer routes
@@ -181,6 +191,12 @@ Route::prefix('customer')->name('customer.')->group(function () {
     
     // Hapus
     Route::delete('/{id}', [CustomerController::class, 'destroy'])->name('destroy');
+});
+
+// ========== HISTORY CUSTOMER ==========
+Route::middleware(['auth', 'role:customer'])->prefix('history')->name('history.')->group(function () {
+    Route::get('/', [HistoryController::class, 'index'])->name('index');
+    Route::get('/{id}', [HistoryController::class, 'show'])->name('show');
 });
 
 /*

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pesanan;
 use App\Models\DetailPesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
@@ -34,14 +35,14 @@ class CheckoutController extends Controller
         }
         
         $request->validate([
-            'nama' => 'required|string|max:255',
             'metode_bayar' => 'required|in:1,2',
         ]);
         
-        // Jika nama dimulai dengan Guest_, generate otomatis
-        $nama = $request->nama;
-        if (str_starts_with($nama, 'Guest_')) {
-            $nama = Pesanan::generateGuestName();
+        // Validasi nama hanya untuk guest
+        if (!Auth::check()) {
+            $request->validate([
+                'nama' => 'required|string|max:255',
+            ]);
         }
         
         $total = 0;
@@ -52,13 +53,23 @@ class CheckoutController extends Controller
         DB::beginTransaction();
         
         try {
-            // Create pesanan dengan metode_bayar yang dipilih
+            // Tentukan user_id (bisa null untuk guest)
+            $userId = Auth::check() ? Auth::id() : null;
+            
+            // Tentukan nama pemesan
+            if (Auth::check()) {
+                $namaPemesan = Auth::user()->name;
+            } else {
+                $namaPemesan = $request->nama;
+            }
+            
             $pesanan = Pesanan::create([
-                'nama' => $nama,
+                'nama' => $namaPemesan,
                 'total' => $total,
-                'metode_bayar' => 1, // ← INI SUDAH DISIMPAN
+                'metode_bayar' => $request->metode_bayar,
                 'status_bayar' => Pesanan::STATUS_PENDING,
-                'timestamp' => now()
+                'timestamp' => now(),
+                'user_id' => $userId,
             ]);
             
             // Create detail pesanan
@@ -78,8 +89,7 @@ class CheckoutController extends Controller
             
             DB::commit();
             
-            // Redirect langsung ke payment dengan metode yang sudah dipilih
-            return redirect()->route('payment.show', $pesanan->idpesanan);
+            return redirect()->route('payment.show', $pesanan->idpesanan)->with('success', 'Pesanan berhasil dibuat');
             
         } catch (\Exception $e) {
             DB::rollBack();

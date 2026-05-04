@@ -15,12 +15,27 @@ class TransaksiController extends Controller
         return view('transaksi.index');
     }
 
-    public function cekBarang($kode) {
+    public function cekBarang($kode)
+    {
+        // Cari berdasarkan kode_barang (bukan id_barang)
         $barang = Barang::where('kode_barang', $kode)->first();
+        
         if ($barang) {
-            return response()->json(['success' => true, 'data' => $barang]);
+            return response()->json([
+                'success' => true,
+                'barang' => [
+                    'id_barang' => $barang->id_barang,
+                    'nama_barang' => $barang->nama_barang,
+                    'harga' => $barang->harga,
+                    'stok' => $barang->stok
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Barang tidak ditemukan'
+            ]);
         }
-        return response()->json(['success' => false]);
     }
 
     public function simpan(Request $request) {

@@ -87,7 +87,13 @@ class BarangController extends Controller
         $generator = new BarcodeGeneratorPNG();
 
         foreach ($barang as $item) {
-            $barcode = $generator->getBarcode($item->id_barang, $generator::TYPE_CODE_128);
+            $barcode = $generator->getBarcode(
+                $item->kode_barang, // 🔥 GANTI INI
+                $generator::TYPE_CODE_128,
+                2,   // biar tebal
+                60   // biar tinggi
+            );
+
             $item->barcode = base64_encode($barcode);
         }
 
