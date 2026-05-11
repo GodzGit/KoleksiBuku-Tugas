@@ -14,6 +14,8 @@
                         <span class="text-secondary text-small">{{ auth()->user()->vendor->nama_vendor ?? 'Vendor' }}</span>
                     @elseif(auth()->user()->role === 'admin')
                         <span class="text-secondary text-small">Administrator</span>
+                    @elseif(auth()->user()->role === 'sales')
+                        <span class="text-secondary text-small">Sales</span>
                     @else
                         <span class="text-secondary text-small">Customer</span>
                     @endif
@@ -22,6 +24,10 @@
             </a>
         </li>
 
+
+
+
+        <!-- Admin -->
         @if(auth()->user()->role === 'admin')
             {{-- MENU UNTUK ADMIN --}}
             <li class="nav-item">
@@ -107,6 +113,24 @@
                 </div>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('toko.index') }}">
+                    <span class="menu-title">🏪 Data Toko</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('toko.history') }}">
+                    <span class="menu-title">📍History Kunjungan Toko</span>
+                </a>
+            </li>
+
+            
+
+
+
+
+            <!-- Vendor -->
         @elseif(auth()->user()->role === 'vendor')
             {{-- MENU UNTUK VENDOR --}}
             <li class="nav-item">
@@ -148,7 +172,22 @@
                 </a>
             </li>
 
-        @else
+            <!-- Sales -->
+         @elseif(auth()->user()->role === 'sales')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('toko.kunjungan') }}">
+                    <span class="menu-title">📍 Kunjungan Toko</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('toko.history') }}">
+                    <span class="menu-title">📊 History Kunjungan</span>
+                </a>
+            </li>
+
+            
+
+        @else 
             {{-- MENU UNTUK CUSTOMER --}}
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('landing') }}">
@@ -163,7 +202,10 @@
                     <i class="mdi mdi-cart menu-icon"></i>
                 </a>
             </li>
-        @endif
+
+        @endif 
+
+
 
     </ul>
 </nav>

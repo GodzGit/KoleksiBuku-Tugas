@@ -10,6 +10,7 @@ use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\VendorScanController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\TokoController;
 
 // ========== PAYMENT GATEWAY CONTROLLERS ==========
 use App\Http\Controllers\LandingController;
@@ -198,6 +199,27 @@ Route::middleware(['auth', 'role:customer'])->prefix('history')->name('history.'
     Route::get('/', [HistoryController::class, 'index'])->name('index');
     Route::get('/{id}', [HistoryController::class, 'show'])->name('show');
 });
+
+
+// Route untuk sales (kunjungan toko)
+Route::middleware(['auth', 'role:sales'])->group(function () {
+    Route::get('/kunjungan', [TokoController::class, 'kunjungan'])->name('toko.kunjungan');
+    Route::post('/toko/proses-kunjungan', [TokoController::class, 'prosesKunjungan']);
+    Route::get('/history', [TokoController::class, 'history'])->name('toko.history');
+});
+
+// Route untuk admin (CRUD toko)
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::resource('toko', TokoController::class)->except(['kunjungan']);
+    Route::get('/toko/{id}/barcode', [TokoController::class, 'cetakBarcode'])->name('toko.barcode');
+    Route::get('/toko/cek-barcode/{barcode}', [TokoController::class, 'cekToko']);
+});
+
+// Kunjungan
+Route::get('/kunjungan', [TokoController::class, 'kunjungan'])->name('toko.kunjungan');
+Route::get('/toko/cek-barcode/{barcode}', [TokoController::class, 'cekToko']);
+Route::post('/toko/proses-kunjungan', [TokoController::class, 'prosesKunjungan']);
+Route::get('/history', [TokoController::class, 'history'])->name('toko.history');
 
 /*
 |--------------------------------------------------------------------------

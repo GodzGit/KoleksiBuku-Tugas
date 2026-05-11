@@ -30,7 +30,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:5|confirmed',
-            'role' => 'required|in:customer,vendor,admin',
+            'role' => 'required|in:customer,vendor,admin,sales',
             'nama_vendor' => 'required_if:role,vendor|nullable|string|max:255',
         ]);
 
@@ -61,6 +61,8 @@ class AuthController extends Controller
             return redirect()->route('vendor.dashboard');
         } elseif ($user->role === 'admin') {
             return redirect()->route('dashboard');
+        } elseif ($user->role === 'sales') {
+            return redirect()->route('toko.kunjungan');
         } else {
             return redirect()->route('landing');
         }
@@ -82,7 +84,9 @@ class AuthController extends Controller
                 return redirect()->route('vendor.dashboard');
             } elseif ($user->role === 'admin') {
                 return redirect()->route('dashboard');
-            } else {
+            } elseif($user->role === 'sales') {
+                return redirect()->route('toko.kunjungan');
+            } else{
                 return redirect()->route('landing');
             }
         }

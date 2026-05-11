@@ -59,6 +59,10 @@
                         <input class="form-check-input" type="radio" name="role" id="roleVendor" value="vendor" @if(old('role') == 'vendor') checked @endif>
                         <label class="form-check-label" for="roleVendor">Vendor (Penjual)</label>
                     </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="role" id="roleSales" value="sales" @if(old('role') == 'sales') checked @endif>
+                        <label class="form-check-label" for="roleSales">Sales</label>
+                    </div>
                 </div>
             </div>
 
